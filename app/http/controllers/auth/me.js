@@ -1,7 +1,7 @@
 function me(req, res) {
   const responseData = {
-    id: req.user.id,
-    full_name: req.user.full_name,
+    id: req.home.id,
+    name: req.home.name,
   };
 
   return res.status(200).send(responseData);

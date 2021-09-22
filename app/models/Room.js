@@ -1,9 +1,9 @@
 const { Model } = require('objection');
 
-class Task extends Model {
+class Room extends Model {
   static get tableName() {
-    return 'tasks';
+    return 'rooms';
   }
 }
 
-module.exports = Task;
+module.exports = Room;

@@ -1,36 +1,35 @@
 const bcrypt = require('bcrypt');
 const { generate } = require('../../helpers/jwt');
 
-const { User } = require('../../models');
+const { Home } = require('../../models');
 const { abort } = require('../../helpers/error');
 
 exports.signIn = async ({ email, password }) => {
-  const user = await User.query()
+  const home = await Home.query()
     .findOne('email', email);
-  if (!user || !(await bcrypt.compare(password, user.password))) return abort(400, 'email or password is incorrect');
-  const accessToken = await generate({ userId: user.id });
+  if (!home || !(await bcrypt.compare(password, home.password))) return abort(400, 'email or password is incorrect');
+  const accessToken = await generate({ homeId: home.id });
   return { accessToken };
 };
 
 exports.signUp = async ({
   email,
   password,
-  fullName,
+  name,
 }) => {
-  if (await User.emailExists(email)) return abort(400, 'Email is already exist');
+  if (await Home.emailExists(email)) return abort(400, 'Email is already exist');
   const salt = parseInt(process.env.SALT_ROUNDS, 10);
   const hashPassword = await bcrypt.hash(password, salt);
-  const user = await User.query()
+  const user = await Home.query()
     .insert({
       email,
       password: hashPassword,
-      full_name: fullName,
-      task_count: 0,
+      name,
     });
   const result = {
     id: user.id,
     email: user.email,
-    fullName: user.full_name,
+    name: user.name,
   };
   return result;
 };
